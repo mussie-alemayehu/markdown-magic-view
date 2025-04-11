@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect } from "react";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import MarkdownPreview from "@/components/MarkdownPreview";
 import { Sun, Moon, Save, FileUp, X } from "lucide-react";
@@ -13,9 +14,8 @@ const Index = () => {
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   );
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const editorRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
   const [syncedScroll, setSyncedScroll] = useState<boolean>(true);
+  const [scrollPercentage, setScrollPercentage] = useState<number>(0);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -42,6 +42,26 @@ const Index = () => {
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
+  };
+
+  const toggleSyncScroll = () => {
+    setSyncedScroll(!syncedScroll);
+    toast({
+      title: syncedScroll ? "Scroll Sync Disabled" : "Scroll Sync Enabled",
+      description: syncedScroll ? "Editor and preview will scroll independently." : "Editor and preview will scroll together.",
+    });
+  };
+
+  const handleEditorScroll = ({ scrollTop, scrollHeight, clientHeight }: { 
+    scrollTop: number; 
+    scrollHeight: number; 
+    clientHeight: number 
+  }) => {
+    if (syncedScroll && isFullscreen) {
+      const maxScroll = scrollHeight - clientHeight;
+      const percentage = maxScroll > 0 ? scrollTop / maxScroll : 0;
+      setScrollPercentage(percentage);
+    }
   };
 
   const handleMarkdownChange = (value: string) => {
@@ -100,6 +120,16 @@ const Index = () => {
             <h1 className="text-xl font-bold text-purple-700 dark:text-purple-400">Markdown Magic</h1>
             <div className="flex items-center space-x-3">
               <button
+                onClick={toggleSyncScroll}
+                className={`px-3 py-1 text-sm rounded-md ${
+                  syncedScroll 
+                    ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200' 
+                    : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                }`}
+              >
+                {syncedScroll ? 'Sync On' : 'Sync Off'}
+              </button>
+              <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-md text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
                 aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
@@ -123,10 +153,14 @@ const Index = () => {
                 isDarkMode={isDarkMode}
                 toggleFullscreen={toggleFullscreen}
                 isFullscreen={isFullscreen}
+                onScroll={handleEditorScroll}
               />
             </div>
             <div className="h-full overflow-auto hidden md:block">
-              <MarkdownPreview markdown={markdown} />
+              <MarkdownPreview 
+                markdown={markdown} 
+                scrollPercentage={scrollPercentage}
+              />
             </div>
           </div>
         </div>

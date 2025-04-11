@@ -1,6 +1,5 @@
-
 import React, { useRef, useEffect } from "react";
-import { Maximize, Minimize, Sun, Moon } from "lucide-react";
+import { Maximize, Minimize } from "lucide-react";
 
 interface MarkdownEditorProps {
   value: string;
@@ -8,6 +7,7 @@ interface MarkdownEditorProps {
   isDarkMode: boolean;
   toggleFullscreen: () => void;
   isFullscreen: boolean;
+  onScroll?: (scrollInfo: { scrollTop: number; scrollHeight: number; clientHeight: number }) => void;
 }
 
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ 
@@ -15,7 +15,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   onChange, 
   isDarkMode, 
   toggleFullscreen,
-  isFullscreen
+  isFullscreen,
+  onScroll
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -34,6 +35,13 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
+  };
+
+  const handleScroll = () => {
+    if (onScroll && textareaRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = textareaRef.current;
+      onScroll({ scrollTop, scrollHeight, clientHeight });
+    }
   };
 
   const insertMarkdown = (before: string, after: string = "") => {
@@ -130,6 +138,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         id="markdown-input"
         value={value}
         onChange={handleChange}
+        onScroll={handleScroll}
         onKeyDown={handleKeyDown}
         onDrop={handleDrop}
         onDragOver={handleDragOver}

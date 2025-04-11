@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
@@ -7,10 +7,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MarkdownPreviewProps {
   markdown: string;
+  scrollPercentage?: number;
 }
 
-const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
+const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, scrollPercentage }) => {
   const [html, setHtml] = useState("");
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Configure marked with highlight.js
@@ -23,7 +25,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
     const renderer = new marked.Renderer();
     
     // Override the code renderer to use highlight.js
-    renderer.code = function({ text, lang, escaped }: { text: string; lang?: string; escaped?: boolean }) {
+    renderer.code = function(text, lang, escaped) {
       const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
       const highlightedCode = hljs.highlight(text, { 
         language: validLanguage,
@@ -55,12 +57,22 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
     }
   }, [markdown]);
 
+  // Apply scroll position when scrollPercentage changes
+  useEffect(() => {
+    if (scrollPercentage !== undefined && previewRef.current) {
+      const { scrollHeight, clientHeight } = previewRef.current;
+      const maxScroll = scrollHeight - clientHeight;
+      previewRef.current.scrollTop = maxScroll * scrollPercentage;
+    }
+  }, [scrollPercentage]);
+
   return (
     <div className="flex flex-col h-full">
       <div className="bg-white p-3 rounded-t-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
         <h2 className="text-sm font-medium text-gray-600 dark:text-gray-300">PREVIEW</h2>
       </div>
       <div
+        ref={previewRef}
         id="html-output"
         className="flex-grow p-4 overflow-auto bg-white border border-gray-200 rounded-b-lg shadow-sm prose prose-purple max-w-none dark:bg-gray-800 dark:border-gray-700 dark:prose-invert"
         dangerouslySetInnerHTML={{ __html: html }}
