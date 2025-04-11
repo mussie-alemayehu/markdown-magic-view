@@ -22,9 +22,9 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
     const renderer = new marked.Renderer();
     
     // Override the code renderer to use highlight.js
-    renderer.code = function(code, language) {
-      const validLanguage = language && hljs.getLanguage(language) ? language : 'plaintext';
-      const highlightedCode = hljs.highlight(code, { 
+    renderer.code = function({ text, lang }: { text: string; lang: string }) {
+      const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
+      const highlightedCode = hljs.highlight(text, { 
         language: validLanguage,
         ignoreIllegals: true 
       }).value;
