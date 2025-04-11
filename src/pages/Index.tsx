@@ -1,8 +1,8 @@
-
 import { useState, useEffect, useRef } from "react";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import MarkdownPreview from "@/components/MarkdownPreview";
 import { Sun, Moon, Save, FileUp, X } from "lucide-react";
+import { saveAs } from "file-saver";
 import { toast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -17,7 +17,6 @@ const Index = () => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [syncedScroll, setSyncedScroll] = useState<boolean>(true);
 
-  // Apply dark mode class to HTML element
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -26,7 +25,6 @@ const Index = () => {
     }
   }, [isDarkMode]);
 
-  // Add fullscreen class to body
   useEffect(() => {
     if (isFullscreen) {
       document.body.classList.add('overflow-hidden');
@@ -46,7 +44,6 @@ const Index = () => {
     setIsFullscreen(!isFullscreen);
   };
 
-  // Error handling for markdown parsing
   const handleMarkdownChange = (value: string) => {
     try {
       setMarkdown(value);
@@ -60,7 +57,6 @@ const Index = () => {
     }
   };
 
-  // Save markdown to file
   const handleSaveMarkdown = () => {
     const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
     saveAs(blob, "markdown-document.md");
@@ -70,7 +66,6 @@ const Index = () => {
     });
   };
 
-  // Handle file upload
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -87,15 +82,12 @@ const Index = () => {
     }
   };
 
-  // Reference to hidden file input
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Trigger file input click
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  // Keyboard shortcuts helper
   const getShortcutKey = () => {
     return navigator.platform.includes('Mac') ? '⌘' : 'Ctrl';
   };
@@ -156,7 +148,7 @@ const Index = () => {
                   
                   <button 
                     onClick={handleSaveMarkdown}
-                    className="p-2 rounded-md text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
+                    className="p-2 rounded-md text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-600"
                     aria-label="Save markdown file"
                   >
                     <Save size={20} />
@@ -164,7 +156,7 @@ const Index = () => {
                   
                   <button 
                     onClick={handleUploadClick}
-                    className="p-2 rounded-md text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
+                    className="p-2 rounded-md text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-600"
                     aria-label="Upload markdown file"
                   >
                     <FileUp size={20} />
