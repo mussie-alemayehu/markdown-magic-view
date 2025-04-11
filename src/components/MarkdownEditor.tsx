@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import { Maximize, Minimize, Sun, Moon } from "lucide-react";
 
@@ -19,6 +18,19 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  useEffect(() => {
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        toggleFullscreen();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isFullscreen, toggleFullscreen]);
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
   };
@@ -36,7 +48,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     
     onChange(newValue);
     
-    // Set cursor position after the operation
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(start + before.length, end + before.length);
@@ -44,7 +55,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Check for keyboard shortcuts
     if (e.ctrlKey || e.metaKey) {
       switch (e.key.toLowerCase()) {
         case 'b':
@@ -66,20 +76,17 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       }
     }
     
-    // Handle code block shortcut
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === '`') {
       e.preventDefault();
       insertMarkdown('```\n', '\n```');
     }
     
-    // Handle fullscreen toggle with F11
     if (e.key === 'F11') {
       e.preventDefault();
       toggleFullscreen();
     }
   };
 
-  // Handle drag and drop file upload
   const handleDrop = (e: React.DragEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -127,7 +134,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         onDragOver={handleDragOver}
         className={`flex-grow p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-200 rounded-b-lg shadow-sm resize-none
           dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200
-          ${isFullscreen ? 'fixed inset-0 z-50 rounded-none h-screen' : ''}`}
+          ${isFullscreen ? 'h-full' : ''}`}
         placeholder="Type your markdown here..."
         spellCheck="false"
       />
