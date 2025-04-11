@@ -14,25 +14,40 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
   useEffect(() => {
     // Configure marked with highlight.js
     marked.setOptions({
-      langPrefix: 'hljs language-',
-      gfm: true,
       breaks: true,
+      gfm: true,
     });
 
-    // Function to highlight code blocks using highlight.js
+    // Create a custom renderer for syntax highlighting
     const renderer = new marked.Renderer();
-    renderer.code = (code, language) => {
-      const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
-      const highlightedCode = hljs.highlight(validLanguage, code).value;
+    
+    // Override the code renderer to use highlight.js
+    renderer.code = (text, lang, escaped) => {
+      const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
+      const highlightedCode = hljs.highlight(validLanguage, {
+        value: text,
+        ignoreIllegals: true
+      }).value;
+      
       return `<pre><code class="hljs language-${validLanguage}">${highlightedCode}</code></pre>`;
     };
 
-    marked.setOptions({ renderer });
+    marked.use({ renderer });
 
     // Convert markdown to HTML
     try {
-      const parsed = marked.parse(markdown);
-      setHtml(parsed);
+      const parsedHtml = marked.parse(markdown);
+      // Make sure we're handling both string and Promise<string> cases
+      if (typeof parsedHtml === 'string') {
+        setHtml(parsedHtml);
+      } else {
+        // Handle the case where marked.parse returns a Promise
+        parsedHtml.then(result => setHtml(result))
+          .catch(error => {
+            console.error("Error parsing markdown:", error);
+            setHtml("<p>Error rendering markdown</p>");
+          });
+      }
     } catch (error) {
       console.error("Error parsing markdown:", error);
       setHtml("<p>Error rendering markdown</p>");
