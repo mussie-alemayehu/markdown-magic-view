@@ -107,6 +107,49 @@ export default {
 						},
 					},
 				},
+				// Add support for dark mode in typography
+				invert: {
+					css: {
+						code: {
+							backgroundColor: '#374151',
+						},
+						a: {
+							color: '#93c5fd',
+						},
+						h1: {
+							color: '#f9fafb',
+						},
+						h2: {
+							color: '#f3f4f6',
+						},
+						h3: {
+							color: '#e5e7eb',
+						},
+						h4: {
+							color: '#d1d5db',
+						},
+						blockquote: {
+							color: '#9ca3af',
+							borderLeftColor: '#4b5563',
+						},
+						hr: {
+							borderColor: '#374151',
+						},
+						pre: {
+							backgroundColor: '#1f2937',
+						},
+						strong: {
+							color: '#f9fafb',
+						},
+						thead: {
+							color: '#f9fafb',
+							borderBottomColor: '#374151',
+						},
+						'tbody tr': {
+							borderBottomColor: '#1f2937',
+						},
+					},
+				},
 			},
 		}
 	},

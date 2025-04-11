@@ -98,4 +98,86 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Add support for dark mode */
+  .dark {
+    color-scheme: dark;
+  }
+  
+  /* Override highlight.js styles for dark mode */
+  .dark .hljs {
+    background: #2d3748;
+    color: #e2e8f0;
+  }
+  
+  .dark .hljs-comment,
+  .dark .hljs-quote {
+    color: #a0aec0;
+  }
+  
+  .dark .hljs-keyword,
+  .dark .hljs-selector-tag,
+  .dark .hljs-addition {
+    color: #63b3ed;
+  }
+  
+  .dark .hljs-number,
+  .dark .hljs-string,
+  .dark .hljs-meta .hljs-meta-string,
+  .dark .hljs-literal,
+  .dark .hljs-doctag,
+  .dark .hljs-regexp {
+    color: #68d391;
+  }
+  
+  .dark .hljs-title,
+  .dark .hljs-section,
+  .dark .hljs-name,
+  .dark .hljs-selector-id,
+  .dark .hljs-selector-class {
+    color: #f6ad55;
+  }
+  
+  /* Custom scrollbar for light and dark mode */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .dark ::-webkit-scrollbar-track {
+    background: #2d3748;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4a5568;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+}
+
+@layer components {
+  /* Custom styles for markdown editor */
+  .markdown-editor {
+    @apply font-mono text-sm;
+  }
+  
+  /* Animation for fullscreen transition */
+  .fullscreen-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
 }
