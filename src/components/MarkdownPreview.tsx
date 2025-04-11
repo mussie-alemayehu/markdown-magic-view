@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MarkdownPreviewProps {
   markdown: string;

@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import { Maximize, Minimize, Sun, Moon } from "lucide-react";
 
@@ -132,7 +133,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         onKeyDown={handleKeyDown}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
-        className={`flex-grow p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-200 rounded-b-lg shadow-sm resize-none
+        className={`flex-grow p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-200 rounded-b-lg shadow-sm resize-none overflow-auto
           dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200
           ${isFullscreen ? 'h-full' : ''}`}
         placeholder="Type your markdown here..."

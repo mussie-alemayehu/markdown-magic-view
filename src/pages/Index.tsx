@@ -115,8 +115,8 @@ const Index = () => {
               </button>
             </div>
           </div>
-          <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 p-4 overflow-hidden">
-            <div className="h-full">
+          <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 p-4 overflow-auto">
+            <div className="h-full overflow-auto">
               <MarkdownEditor
                 value={markdown}
                 onChange={handleMarkdownChange}
@@ -125,7 +125,7 @@ const Index = () => {
                 isFullscreen={isFullscreen}
               />
             </div>
-            <div className="h-full hidden md:block">
+            <div className="h-full overflow-auto hidden md:block">
               <MarkdownPreview markdown={markdown} />
             </div>
           </div>
