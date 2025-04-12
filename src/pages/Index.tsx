@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import MarkdownPreview from "@/components/MarkdownPreview";
 import { Sun, Moon, Save, FileUp, X } from "lucide-react";
@@ -16,6 +15,9 @@ const Index = () => {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [syncedScroll, setSyncedScroll] = useState<boolean>(true);
   const [scrollPercentage, setScrollPercentage] = useState<number>(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -101,8 +103,6 @@ const Index = () => {
       reader.readAsText(file);
     }
   };
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const handleUploadClick = () => {
     fileInputRef.current?.click();

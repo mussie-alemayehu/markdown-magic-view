@@ -25,9 +25,10 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, scrollPerce
     const renderer = new marked.Renderer();
     
     // Override the code renderer to use highlight.js
-    renderer.code = function(text, lang, escaped) {
-      const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
-      const highlightedCode = hljs.highlight(text, { 
+    // We need to adapt the function signature to match the expected type
+    renderer.code = function(code, language, isEscaped) {
+      const validLanguage = language && hljs.getLanguage(language) ? language : 'plaintext';
+      const highlightedCode = hljs.highlight(code, { 
         language: validLanguage,
         ignoreIllegals: true 
       }).value;
