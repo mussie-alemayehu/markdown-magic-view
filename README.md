@@ -6,6 +6,8 @@
 
 An advanced, feature-rich, web-based Markdown editor that provides a seamless real-time preview experience. Write Markdown on the left, see the perfectly rendered HTML on the right, instantly! Built with modern web technologies for optimal performance and user experience.
 
+Check it out: [https://markdown-magic-view.vercel.app/](https://markdown-magic-view.vercel.app/)
+
 ---
 
 ## ✨ Features
