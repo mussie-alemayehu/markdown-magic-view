@@ -10,6 +10,13 @@ interface MarkdownPreviewProps {
   scrollPercentage?: number;
 }
 
+// Define the Code interface to match the expected signature
+interface Code {
+  text: string;
+  lang: string;
+  escaped: boolean;
+}
+
 const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, scrollPercentage }) => {
   const [html, setHtml] = useState("");
   const previewRef = useRef<HTMLDivElement>(null);
@@ -25,12 +32,12 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, scrollPerce
     const renderer = new marked.Renderer();
     
     // Override the code renderer to use highlight.js
-    // Using the correct function signature for marked version
-    renderer.code = (code, language) => {
-      const validLanguage = language && hljs.getLanguage(language) ? language : 'plaintext';
+    // Fix the signature to match the expected interface
+    renderer.code = function({ text, lang, escaped }: Code): string {
+      const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
       try {
         // Use the correct hljs.highlight syntax based on the installed version
-        const highlightedCode = hljs.highlight(code, { 
+        const highlightedCode = hljs.highlight(text, { 
           language: validLanguage,
           ignoreIllegals: true 
         }).value;
@@ -38,7 +45,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, scrollPerce
         return `<pre><code class="hljs language-${validLanguage}">${highlightedCode}</code></pre>`;
       } catch (error) {
         console.error("Highlighting error:", error);
-        return `<pre><code class="plaintext">${code}</code></pre>`;
+        return `<pre><code class="plaintext">${text}</code></pre>`;
       }
     };
 
